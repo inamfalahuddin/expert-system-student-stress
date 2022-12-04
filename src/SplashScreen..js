@@ -10,10 +10,11 @@ function SplashScreen() {
 
   useEffect(() => {
     document.title = "ES | Tingkat Stres Mahasiswa";
-    setTimeout(() => {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }, 2000);
-  }, []);
+    // setTimeout(() => {
+    //   dispatch({ type: "SET_LOADING", payload: false });
+    // }, 2000);
+    dispatch({ type: "SET_LOADING", payload: false });
+  }, [dispatch]);
 
   return (
     <>
@@ -43,7 +44,7 @@ function SplashScreen() {
               ukur tingkat kesetresan kamu bersama kami dengan gratis
             </p>
             <Link
-              to={"Quiz"}
+              to={"/register"}
               className="opacity-0 flex justify-center animate-fadeIn"
               style={{ animationDelay: ".75s" }}
             >

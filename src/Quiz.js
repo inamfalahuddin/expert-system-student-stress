@@ -7,9 +7,11 @@ import { useAppContext } from "./context/app-context";
 import PrevIcon from "./images/ic_round-navigate-next.svg";
 import data from "./data/questions.json";
 import answers from "./data/answers.json";
+import { useNavigate } from "react-router-dom";
 
 function Quiz() {
   const [state, dispatch] = useAppContext();
+  const navigate = useNavigate();
 
   const btnNext = () => {
     if (state.count < state.numOfMax) {
@@ -24,13 +26,17 @@ function Quiz() {
     if (state.count > 1) dispatch({ type: "SET_ANIMATE", payload: false });
   };
 
+  const btnFinish = () => {
+    navigate("/result");
+  };
+
   useEffect(() => {
     document.title = "ES | Questions";
 
     dispatch({ type: "NUM_OF_MAX", payload: data.length });
     dispatch({ type: "SET_ANIMATE", payload: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.count]);
+  }, [state.count, state.answers]);
 
   return (
     <div className={`bg-no-repeat bg-cover bg-top`}>
@@ -69,7 +75,7 @@ function Quiz() {
             <img className="w-7 h-7" src={PrevIcon} alt="" />
             <span className="text-primary">Prev</span>
           </button>
-          <div onClick={btnNext}>
+          <div onClick={state.count === state.numOfMax ? btnFinish : btnNext}>
             <Button
               text={state.count === state.numOfMax ? "Finish" : "Next"}
               color="primary"

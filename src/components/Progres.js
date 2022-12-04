@@ -3,7 +3,10 @@ import { useAppContext } from "../context/app-context";
 
 function Progres() {
   const [state] = useAppContext();
-  const percentace = (100 / state.numOfMax) * state.count;
+  // const percentace = (100 / state.numOfMax) * state.count;
+  // const percentace = (100 / state.answers.filter((val) => val > 0).length)
+  const percentace =
+    (100 / state.numOfMax) * state.answers.filter((val) => val > 0).length;
 
   return (
     <div className="w-full h-[6px] bg-slate-200 rounded-full my-5">
