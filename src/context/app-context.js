@@ -12,7 +12,7 @@ const intialState = {
   numOfMax: 0,
   animate: false,
   answers: array(questions.length),
-  isLoading: true,
+  isLoading: false,
 };
 
 const reducer = (state, action) => {

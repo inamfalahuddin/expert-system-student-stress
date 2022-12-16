@@ -1,20 +1,48 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import Alert from "./components/Alert";
 import Button from "./components/Button";
 
 function Login() {
   const [time, setTime] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState({});
+  const [navigate, setNavigate] = useState(false);
+
   useEffect(() => {
     document.title = "ES | Login";
-
     let hour = new Date().getHours();
-
     setTime(
       "Selamat " + ((hour < 12 && "Pagi") || (hour < 18 && "Sore") || "Malam")
     );
   }, []);
+
+  const submit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const endpoint = "http://localhost:5000/user/login";
+      const { data } = await axios.post(endpoint, {
+        username: email,
+        password: password,
+      });
+
+      setMessage({ msg: data.message, color: "success" });
+
+      setNavigate(false);
+      console.log(data);
+    } catch (err) {
+      setMessage({ msg: err.response.data.message, color: "danger" });
+    }
+  };
+
+  if (navigate) {
+    return <Navigate to="/quiz" />;
+  }
 
   return (
     <>
@@ -32,12 +60,29 @@ function Login() {
             Silahkan mendaftar terlebih dahulu ya 😊
           </h2>
 
+          {message.msg !== undefined ? (
+            <Alert
+              message={message.msg}
+              bgColor={
+                message.msg === "Username sudah digunakan"
+                  ? "danger"
+                  : message.msg === "Register berhasil"
+                  ? "success"
+                  : "warning"
+              }
+            />
+          ) : (
+            ""
+          )}
+
           <div className="px-5">
             <input
               type="email"
               className="border outline-primary w-full p-2 px-4 mb-5 rounded-md animate-fadeInX opacity-0"
               placeholder="Email"
               style={{ animationDelay: ".45s" }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <div className="flex gap-2 mb-5">
               <input
@@ -45,6 +90,8 @@ function Login() {
                 className="border outline-primary w-full p-2 px-4 rounded-md animate-fadeInX opacity-0"
                 placeholder="Password"
                 style={{ animationDelay: ".65s" }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <div
                 className="opacity-0 border rounded-md px-4 flex items-center cursor-pointer hover:bg-slate-50 transition-all animate-fadeInX"
@@ -95,13 +142,13 @@ function Login() {
             </Link>
           </p>
 
-          <Link
-            to={"/quiz"}
+          <div
             className="opacity-0 flex justify-center animate-fadeIn"
             style={{ animationDelay: ".75s" }}
+            onClick={submit}
           >
             <Button text="Login →" color="primary" />
-          </Link>
+          </div>
         </div>
       </div>
     </>
