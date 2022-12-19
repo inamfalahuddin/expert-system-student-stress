@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HeroImage from "./images/hero-img.svg";
 import Button from "./components/Button";
@@ -7,14 +7,14 @@ import Loading from "./components/Loading";
 
 function SplashScreen() {
   const [state, dispatch] = useAppContext();
+  const [isImage, setIsImage] = useState(false);
 
   useEffect(() => {
     document.title = "ES | Tingkat Stres Mahasiswa";
     // setTimeout(() => {
-    //   dispatch({ type: "SET_LOADING", payload: false });
-    // }, 2000);
     dispatch({ type: "SET_LOADING", payload: false });
-  }, [dispatch]);
+    // }, 2000);
+  }, []);
 
   return (
     <>
@@ -23,11 +23,20 @@ function SplashScreen() {
           className={`bg-no-repeat bg-cover bg-top lg:flex lg:justify-center lg:items-center lg:h-[100vh]`}
         >
           <div className="container px-5 py-28">
-            <img
-              className="w-90 transform -translate-x-7 mx-auto"
-              src={HeroImage}
-              alt=""
-            />
+            <div>
+              <div
+                role="status"
+                className={`animate-pulse ${isImage ? "hidden" : ""}`}
+              >
+                <div className="h-52 bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4 mx-auto"></div>
+              </div>
+              <img
+                className={`w-90 transform -translate-x-7 mx-auto`}
+                src={HeroImage}
+                alt=""
+                onLoad={() => setIsImage(true)}
+              />
+            </div>
             <h1 className="opacity-0 font-bold text-3xl  text-center pt-10 pb-2 animate-fadeIn">
               Hai, Selamat Datang.
             </h1>

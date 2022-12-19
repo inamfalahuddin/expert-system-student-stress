@@ -1,9 +1,25 @@
+import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import IconBack from "../images/akar-icons_arrow-down.svg";
 
-function Navbar() {
+function Navbar({ name }) {
   const nav = useNavigate();
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    const Cookie = document.cookie;
+
+    try {
+      const { data } = await axios.delete(
+        "http://192.168.18.253:5000/user/logout"
+      );
+
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div className="container">
@@ -14,9 +30,17 @@ function Navbar() {
         >
           <img src={IconBack} alt="" />
         </button>
-        <h2 className="font-bold bg-slate-50 px-4 py-2 rounded-md cursor-pointer">
-          In'am
-        </h2>
+        <div>
+          <h2
+            className="font-bold bg-slate-50 px-4 py-2 rounded-md cursor-pointer capitalize"
+            onClick={logout}
+          >
+            {name} - Logout
+          </h2>
+          <div className="hidden font-bold bg-slate-50 px-4 py-2 rounded-lg cursor-pointer capitalize absolute translate-y-2 text-sm rounded-tl-none rounded-br-none">
+            Logout
+          </div>
+        </div>
       </div>
     </div>
   );

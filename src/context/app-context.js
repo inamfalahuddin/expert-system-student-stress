@@ -12,7 +12,9 @@ const intialState = {
   numOfMax: 0,
   animate: false,
   answers: array(questions.length),
-  isLoading: false,
+  isLoading: true,
+  isAuth: false,
+  cookie: "",
 };
 
 const reducer = (state, action) => {
@@ -38,6 +40,10 @@ const reducer = (state, action) => {
       return { ...state, answers: action.payload };
     case "SET_LOADING":
       return { ...state, isLoading: action.payload };
+    case "SET_AUTH":
+      return { ...state, isAuth: action.payload };
+    case "SET_COOKIE":
+      return { ...state, cookie: action.payload };
     default:
       throw new Error();
   }

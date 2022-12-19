@@ -1,18 +1,18 @@
 [
   {
     "id": "0",
-    "answer": "Sering merasakannya"
+    "answer": "Tidak pernah merasakan"
   },
   {
     "id": "1",
-    "answer": "Jarang merasakannya"
-  },
-  {
-    "id": "2",
     "answer": "Pernah merasakannya"
   },
   {
+    "id": "2",
+    "answer": "Jarang merasakannya"
+  },
+  {
     "id": "3",
-    "answer": "Tidak pernah merasakan"
+    "answer": "Sering merasakannya"
   }
 ]
