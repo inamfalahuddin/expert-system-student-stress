@@ -1,9 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./components/Button";
 import jwt_decode from "jwt-decode";
 import Inference from "./components/Inference";
+import { useAppContext } from "./context/app-context";
+import Loading from "./components/Loading";
+import Navbar from "./components/Navbar";
 
 function Result() {
   const [name, setName] = useState("");
@@ -17,11 +20,15 @@ function Result() {
   const [dimensi, setDimensi] = useState("");
   const [stress, setStress] = useState("");
   const [inference, setInference] = useState([]);
+  const [render, setRender] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "ES | Hasil";
 
     refreshToken();
+
     if (id !== "") {
       getResult(id);
       getInference(id);
@@ -69,14 +76,13 @@ function Result() {
       );
     } catch (err) {
       console.log(err);
-      alert(err);
     }
   };
 
   const getInference = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/quiz/inference?id=${id}`,
+        `http://192.168.18.253:5000/quiz/inference?id=${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -100,17 +106,19 @@ function Result() {
       setId(decoded.id);
       setUsername(decoded.username);
       setExpToken(decoded.exp);
+
+      setRender(true);
     } catch (err) {
       console.log(err);
+      navigate("/login");
     }
   };
 
-  return (
-    <div
-      className={`bg-no-repeat bg-cover bg-top lg:flex lg:justify-center lg:items-center lg:h-[100vh]`}
-    >
-      <div className="container px-5 py-28">
-        <div className="p-5 border rounded-lg mb-5 bg-primary">
+  return render ? (
+    <div className={`bg-no-repeat bg-cover bg-top`}>
+      <Navbar name={name.split(" ")[0]} />
+      <div className="container px-5 pt-5 pb-8">
+        <div className="p-5 border rounded-lg mb-5 bg-primary animate-fadeInX opacity-0">
           <h2 className="font-bold mb-4 text-white">Identitas</h2>
           <table className="w-full">
             <thead>
@@ -136,7 +144,7 @@ function Result() {
             </tbody>
           </table>
         </div>
-        <div className="p-5 border rounded-lg mb-5">
+        <div className="p-5 border rounded-lg mb-5 opacity-0 animate-fadeTop">
           <h2 className="font-bold mb-4">Hasil</h2>
           <table className="w-full">
             <thead>
@@ -176,7 +184,9 @@ function Result() {
             )}
             <thead>
               <tr>
-                <td className="text-md font-bold p-2 pt-7">Z Score</td>
+                <td className="text-md font-bold p-2 pt-7" colSpan={2}>
+                  Z Score
+                </td>
               </tr>
             </thead>
             <tbody>
@@ -217,6 +227,8 @@ function Result() {
         </Link>
       </div>
     </div>
+  ) : (
+    ""
   );
 }
 

@@ -10,7 +10,7 @@ import answers from "./data/answers.json";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import Skeleton from "./components/Skeleton";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loading from "./components/Loading";
 
 function Quiz() {
@@ -32,6 +32,7 @@ function Quiz() {
 
     dispatch({ type: "NUM_OF_MAX", payload: data.length });
     dispatch({ type: "SET_ANIMATE", payload: true });
+
     // dispatch({ type: "SET_LOADING", payload: true });
   }, [state.count, state.answers]);
 
