@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import Alert from "./components/Alert";
-import Button from "./components/Button";
-import { useAppContext } from "./context/app-context";
+import Alert from "../components/Alert";
+import Button from "../components/Button";
+import { useAppContext } from "../context/app-context";
 
 function Login() {
   const [state, dispatch] = useAppContext();

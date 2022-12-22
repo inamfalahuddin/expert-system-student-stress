@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Answers from "./components/Answers";
-import Button from "./components/Button";
-import Navbar from "./components/Navbar";
-import Progres from "./components/Progres";
-import { useAppContext } from "./context/app-context";
-import PrevIcon from "./images/ic_round-navigate-next.svg";
-import data from "./data/questions.json";
-import answers from "./data/answers.json";
+import Answers from "../components/Answers";
+import Button from "../components/Button";
+import Navbar from "../components/Navbar";
+import Progres from "../components/Progres";
+import { useAppContext } from "../context/app-context";
+import PrevIcon from "../images/ic_round-navigate-next.svg";
+import data from "../data/questions.json";
+import answers from "../data/answers.json";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import Skeleton from "./components/Skeleton";
+import Skeleton from "../components/Skeleton";
 import { useNavigate } from "react-router-dom";
-import Loading from "./components/Loading";
+import Loading from "../components/Loading";
 
 function Quiz() {
   const [state, dispatch] = useAppContext();

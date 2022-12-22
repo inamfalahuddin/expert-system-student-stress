@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import HeroImage from "./images/hero-img.svg";
-import Button from "./components/Button";
-import { useAppContext } from "./context/app-context";
-import Loading from "./components/Loading";
+import HeroImage from "../images/hero-img.svg";
+import Button from "../components/Button";
+import { useAppContext } from "../context/app-context";
+import Loading from "../components/Loading";
 
 function SplashScreen() {
   const [state, dispatch] = useAppContext();
@@ -28,10 +28,10 @@ function SplashScreen() {
                 role="status"
                 className={`animate-pulse ${isImage ? "hidden" : ""}`}
               >
-                <div className="h-52 bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4 mx-auto"></div>
+                <div className="h-52 bg-white w-1/2 mb-4 mx-auto"></div>
               </div>
               <img
-                className={`w-90 transform -translate-x-7 mx-auto`}
+                className={`w-90 transform -translate-x-7 mx-auto animate-fadeIn opacity-0`}
                 src={HeroImage}
                 alt=""
                 onLoad={() => setIsImage(true)}

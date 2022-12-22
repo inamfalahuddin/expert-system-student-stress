@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Button from "./components/Button";
+import Button from "../components/Button";
 import jwt_decode from "jwt-decode";
-import Inference from "./components/Inference";
-import { useAppContext } from "./context/app-context";
-import Loading from "./components/Loading";
-import Navbar from "./components/Navbar";
+import Inference from "../components/Inference";
+import { useAppContext } from "../context/app-context";
+import Navbar from "../components/Navbar";
 
 function Result() {
   const [name, setName] = useState("");

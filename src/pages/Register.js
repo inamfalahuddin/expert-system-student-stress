@@ -1,10 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import Alert from "./components/Alert";
-import Button from "./components/Button";
-import Loading from "./components/Loading";
-import { useAppContext } from "./context/app-context";
+import { Link, useNavigate } from "react-router-dom";
+import Alert from "../components/Alert";
+import Button from "../components/Button";
+import { useAppContext } from "../context/app-context";
 
 function Register() {
   const [time, setTime] = useState("");

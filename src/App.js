@@ -1,16 +1,26 @@
 import { Fragment } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/app-context";
-import Login from "./Login";
-import Quiz from "./Quiz";
-import Register from "./Register";
-import Result from "./Result";
-import SplashScreen from "./SplashScreen.";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import Quiz from "./pages/Quiz";
+import Register from "./pages/Register";
+import Result from "./pages/Result";
+import SplashScreen from "./pages/SplashScreen.";
 
 function App() {
   return (
     <Fragment>
       <Routes>
+        <Route
+          path="*"
+          element={
+            <AppProvider>
+              <NotFound />
+            </AppProvider>
+          }
+        />
         <Route
           path="/"
           element={
@@ -48,6 +58,14 @@ function App() {
           element={
             <AppProvider>
               <Result />
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <AppProvider>
+              <Dashboard />
             </AppProvider>
           }
         />

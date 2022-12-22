@@ -6,6 +6,10 @@ module.exports = {
       colors: {
         primary: "#3E6CF7",
         "dark-primary": "#2D4FB8",
+        red: "#ef4444",
+        orange: "#f97316",
+        green: "#22c55e",
+        blue: "#3b82f6",
       },
       backgroundImage: {
         BgSplashMobile: "url('/src/images/bg-splash-mobile.png')",
