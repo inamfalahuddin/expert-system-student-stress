@@ -21,6 +21,10 @@ code {
   @apply max-w-xl mx-auto;
 }
 
+.nav-actived {
+  @apply text-white bg-gradient-to-r from-sky-600 to-cyan-400;
+}
+
 html {
   @apply bg-white;
 }

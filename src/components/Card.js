@@ -22,7 +22,7 @@ function Card({ color }) {
   };
 
   return (
-    <div className="p-4 shadow-md mb-5 border-2 border-slate-50 flex items-center justify-between rounded-lg hover:shadow-none transition-all">
+    <div className="bg-white py-4 px-5 mb-5 flex items-center justify-between rounded-lg transition-all">
       <div className={`flex items-center gap-5`}>
         <div
           className={`w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center text-white`}

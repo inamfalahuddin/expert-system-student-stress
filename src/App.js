@@ -1,13 +1,16 @@
 import { Fragment } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/app-context";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/admin/Dashboard";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Quiz from "./pages/Quiz";
 import Register from "./pages/Register";
 import Result from "./pages/Result";
 import SplashScreen from "./pages/SplashScreen.";
+import DashboardPage from "./pages/admin/DashboardPage";
+import Dimensions from "./pages/admin/Dimensions";
+import Consultation from "./pages/admin/Consultation";
 
 function App() {
   return (
@@ -62,10 +65,32 @@ function App() {
           }
         />
         <Route
-          path="/dashboard"
+          path="/admin/dashboard"
           element={
             <AppProvider>
-              <Dashboard />
+              <DashboardPage>
+                <Dashboard />
+              </DashboardPage>
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/admin/dimensi"
+          element={
+            <AppProvider>
+              <DashboardPage>
+                <Dimensions />
+              </DashboardPage>
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/admin/konsultasi"
+          element={
+            <AppProvider>
+              <DashboardPage>
+                <Consultation />
+              </DashboardPage>
             </AppProvider>
           }
         />
