@@ -1,17 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.09cfa08e.css",
-    "main.js": "/static/js/main.bb9df9af.js",
+    "main.css": "/static/css/main.5e68c5f1.css",
+    "main.js": "/static/js/main.4192486b.js",
     "static/media/hero-img.svg": "/static/media/hero-img.f2cbfc584f7094bfb7cbe6386974eae9.svg",
+    "static/media/logo-umby.png": "/static/media/logo-umby.34ab0150e3b8091afd51.png",
     "static/media/bi_check.svg": "/static/media/bi_check.8a73a7751a103883b96595d369050805.svg",
     "static/media/ic_round-navigate-next.svg": "/static/media/ic_round-navigate-next.9f4163bab85a9bdbd1d6292b1c18d0fb.svg",
     "index.html": "/index.html",
     "static/media/akar-icons_arrow-down.svg": "/static/media/akar-icons_arrow-down.21e2cd3381cc1d2c0d304f2cebf9cf25.svg",
-    "main.09cfa08e.css.map": "/static/css/main.09cfa08e.css.map",
-    "main.bb9df9af.js.map": "/static/js/main.bb9df9af.js.map"
+    "main.5e68c5f1.css.map": "/static/css/main.5e68c5f1.css.map",
+    "main.4192486b.js.map": "/static/js/main.4192486b.js.map"
   },
   "entrypoints": [
-    "static/css/main.09cfa08e.css",
-    "static/js/main.bb9df9af.js"
+    "static/css/main.5e68c5f1.css",
+    "static/js/main.4192486b.js"
   ]
 }

@@ -2,30 +2,25 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
 
-function Consultation() {
-  const [konsultasi, setKonsultasi] = useState([]);
+function TestResult() {
+  const [hasil, setHasil] = useState([]);
 
   useEffect(() => {
-    getKonsultasi();
+    getHasil();
   }, []);
 
-  const getKonsultasi = async () => {
+  const getHasil = async () => {
     try {
-      const { data } = await axios.get(
-        "http://192.168.18.253:5000/konsultasi/"
-      );
-
-      setKonsultasi(data.payload.data);
-      // console.log(data.payload.data);
+      const { data } = await axios.get("http://192.168.18.253:5000/result/");
+      setHasil(data.payload.data);
     } catch (err) {
       console.log(err);
     }
   };
-
   return (
     <>
       <h2 className="text-xl text-gray-600 font-medium mb-5">
-        Data Konsultasi By Name
+        Hasil Tes Mahasiswa
       </h2>
       <div className="flex items-center justify-between lg:col-span-2 mb-5">
         <p className="max-w-3xl text-gray-500">
@@ -37,7 +32,7 @@ function Consultation() {
       </div>
       <div className="w-full mx-auto bg-white rounded-lg">
         <header className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-xl text-gray-600 font-medium mb-5">Dimensi</h2>
+          <h2 className="text-xl text-gray-600 font-medium mb-5">Hasil Tes</h2>
         </header>
         <div className="p-3">
           <div className="overflow-x-auto">
@@ -45,7 +40,9 @@ function Consultation() {
               <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                 <tr>
                   <th className="p-2 whitespace-nowrap">
-                    <div className="font-semibold text-left">ID Konsultasi</div>
+                    <div className="font-semibold text-left">
+                      ID Hasil Konsultasi
+                    </div>
                   </th>
                   <th className="p-2 whitespace-nowrap">
                     <div className="font-semibold text-left">ID User</div>
@@ -54,19 +51,15 @@ function Consultation() {
                     <div className="font-semibold text-left">Nama User</div>
                   </th>
                   <th className="p-2 whitespace-nowrap">
-                    <div className="font-semibold text-left">D1</div>
-                  </th>
-                  <th className="p-2 whitespace-nowrap">
-                    <div className="font-semibold text-left">D2</div>
-                  </th>
-                  <th className="p-2 whitespace-nowrap">
-                    <div className="font-semibold text-left">D3</div>
-                  </th>
-                  <th className="p-2 whitespace-nowrap">
-                    <div className="font-semibold text-left">Total</div>
+                    <div className="font-semibold text-left">Z Score Total</div>
                   </th>
                   <th className="p-2 whitespace-nowrap">
                     <div className="font-semibold text-left">Sesi</div>
+                  </th>
+                  <th className="p-2 whitespace-nowrap">
+                    <div className="font-semibold text-left">
+                      Tingkat Stress
+                    </div>
                   </th>
                   <th className="p-2 whitespace-nowrap">
                     <div className="font-semibold text-left">Action</div>
@@ -74,7 +67,7 @@ function Consultation() {
                 </tr>
               </thead>
               <tbody className="text-sm divide-y divide-gray-100 text-gray-500">
-                {konsultasi.map((value, index) => (
+                {hasil.map((value, index) => (
                   <tr
                     key={index}
                     className="animate-fadeIn opacity-0"
@@ -82,7 +75,7 @@ function Consultation() {
                   >
                     <td className="p-2 whitespace-nowrap">
                       <div className="font-medium text-gray-800">
-                        {value.id_konsultasi}
+                        {value.id_konsultasi_hasildetail}
                       </div>
                     </td>
                     <td className="p-2 whitespace-nowrap">
@@ -96,29 +89,13 @@ function Consultation() {
                       </div>
                     </td>
                     <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">
-                        {JSON.parse(value.jawaban)[0]}
-                      </div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">
-                        {JSON.parse(value.jawaban)[1]}
-                      </div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">
-                        {JSON.parse(value.jawaban)[2]}
-                      </div>
-                    </td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">
-                        {JSON.parse(value.jawaban)[0] +
-                          JSON.parse(value.jawaban)[1] +
-                          JSON.parse(value.jawaban)[2]}
-                      </div>
+                      <div className="text-left">{value.z_score_total}</div>
                     </td>
                     <td className="p-2 whitespace-nowrap">
                       <div className="text-left">{value.sesi}</div>
+                    </td>
+                    <td className="p-2 whitespace-nowrap">
+                      <div className="text-left">{value.tingkat_stres}</div>
                     </td>
                     <td className="p-2 whitespace-nowrap flex items-center gap-10">
                       <Button text="Edit" color="primary" />
@@ -152,4 +129,4 @@ function Consultation() {
   );
 }
 
-export default Consultation;
+export default TestResult;

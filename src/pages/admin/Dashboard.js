@@ -1,18 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../components/Card";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import LinePercentace from "../../components/LinePercentace";
+import axios from "axios";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Dashboard() {
+  const [dataTes, setDataTes] = useState([]);
+
+  useEffect(() => {
+    getDataResult();
+  }, []);
+
+  const getDataResult = async () => {
+    try {
+      const { data } = await axios.get("http://192.168.18.253:5000/result/");
+      const result = data.payload.data;
+
+      const TSRendah = result.filter(
+        (val) => val.id_tingkat_stres === "TS01"
+      ).length;
+      const TSSedang = result.filter(
+        (val) => val.id_tingkat_stres === "TS02"
+      ).length;
+      const TSBerat = result.filter(
+        (val) => val.id_tingkat_stres === "TS03"
+      ).length;
+
+      setDataTes({
+        ringan: TSRendah,
+        sedang: TSSedang,
+        berat: TSBerat,
+        total: result.length,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const data = {
     labels: ["Berat", "Sedang", "Ringan"],
     datasets: [
       {
         label: "Total",
-        data: [12, 19, 3],
+        data: [dataTes.ringan, dataTes.sedang, dataTes.berat],
         backgroundColor: ["#ef4444", "#fbbf24", "#0ea5e9"],
         borderWidth: 0,
         borderRadius: 10,
@@ -32,7 +64,7 @@ function Dashboard() {
         var fontSize = (height / 400).toFixed(2);
         ctx.font = fontSize + "em sans-serif";
         ctx.textBaseline = "bottom";
-        var text = "Total User",
+        var text = "Total Konsultasi",
           textX = Math.round((width - ctx.measureText(text).width) / 2),
           textY = height / 2;
         ctx.fillText(text, textX, textY);
@@ -46,7 +78,7 @@ function Dashboard() {
         var fontSize = (height / 160).toFixed(2);
         ctx.font = fontSize + "em sans-serif";
         ctx.textBaseline = "top";
-        var text = "200",
+        var text = dataTes.total,
           textX = Math.round((width - ctx.measureText(text).width) / 2),
           textY = height / 2;
         ctx.fillText(text, textX, textY);
@@ -55,14 +87,20 @@ function Dashboard() {
     },
   ];
 
+  console.log(dataTes.total);
+
   return (
     <>
       <h2 className="text-xl text-gray-600 font-medium mb-5">Data Mahasiswa</h2>
       <div className="w-full grid lg:grid-cols-3 text-gray-500 gap-10">
         <div className="bg-white w-full rounded-lg p-5">
-          <Doughnut data={data} plugins={plugins} />
+          {dataTes.total ? (
+            <Doughnut data={data} plugins={plugins} />
+          ) : (
+            <span>Loading</span>
+          )}
         </div>
-
+        {console.log(dataTes.total)}
         <div className="col-span-2">
           <div className="w-full mx-auto bg-white rounded-lg">
             <header className="px-5 py-4 border-b border-gray-100">

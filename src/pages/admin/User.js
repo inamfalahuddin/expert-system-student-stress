@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "../../components/Button";
 import NavbarAdmin from "../../components/NavbarAdmin2";
 
@@ -6,93 +8,121 @@ function User() {
   const [user, setUser] = useState([]);
 
   useEffect(() => {
-    let hasil = [];
-    for (let i = 0; i < 50; i++) {
-      hasil.push("coba");
-    }
-    setUser(hasil);
+    getUser();
   }, []);
 
+  const getUser = async () => {
+    try {
+      const { data } = await axios.get("http://192.168.18.253:5000/users");
+
+      setUser(data.payload.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <div
-      className={`bg-no-repeat bg-cover bg-top lg:justify-center lg:items-center lg:h-[100vh]`}
-    >
-      <NavbarAdmin />
-      <div className="container p-5  text-gray-700">
-        <div className="p-5 border rounded-lg mb-5 bg-primary animate-fadeInX opacity-0">
-          <h2 className="font-bold mb-4 text-white">Identitas</h2>
-          <table className="w-full">
-            <thead>
-              <tr key="10" className="text-gray-600">
-                <td className="text-white">ID</td>
-                <td className="text-white">:</td>
-                <td className="text-white">id</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr key="20" className="text-gray-600">
-                <td className="text-white ">Nama</td>
-                <td className="text-white">:</td>
-                <td className="text-white font-bold">nama</td>
-              </tr>
-            </tbody>
-            <tbody>
-              <tr key="20" className="text-gray-600">
-                <td className="text-white">Email</td>
-                <td className="text-white">:</td>
-                <td className="text-white">email</td>
-              </tr>
-            </tbody>
-          </table>
+    <div className="">
+      {/* row data mahasiswa */}
+      <div className="mb-5">
+        <h2 className="text-xl text-gray-600 font-medium mb-5">
+          Data Mahasiswa
+        </h2>
+        <div className="flex items-center justify-between lg:col-span-2">
+          <p className="max-w-3xl text-gray-500">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s,
+          </p>
+          <Button text="Tambah" color="primary" />
         </div>
-        <div className="flex items-center justify-between">
-          <h1 className="capitalize font-bold my-5 text-lg">data mahasiswa</h1>
-          <div className="my-5 flex justify-end text-sm">
-            <Button text="Tambah" color="primary" />
-          </div>
-        </div>
-        <div className="overflow-x-auto overflow-y-scroll max-h-[500px]">
-          <table width={700} className="">
-            <thead className="bg-gray-100">
-              <tr>
-                <td className="py-5 px-4">No.</td>
-                <td className="py-5 px-4">NIM</td>
-                <td className="py-5 px-4">Nama</td>
-                <td className="py-5 px-4">Username</td>
-                <td className="py-5 px-4">Action</td>
+      </div>
+      <div className="overflow-x-auto relative shadow-md sm:rounded-lg col-span-2">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="py-3 pl-6 w-1">
+                No.
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Name
+              </th>
+              <th scope="col" className="py-3 px-6">
+                ID of Mahasiswa
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Status
+              </th>
+              <th scope="col" className="py-3 px-6">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {user.map((value, index) => (
+              <tr
+                key={index}
+                className="animate-fadeIn opacity-0 bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                style={{ animationDelay: `${index / 45}s` }}
+              >
+                <td className="py-3 pl-6 w-1">{index + 1}.</td>
+                <th
+                  scope="row"
+                  className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  <div className="w-10 h-10 rounded-full bg-orange flex items-center justify-center text-xl text-white">
+                    R
+                  </div>
+                  <div className="pl-3">
+                    <div className="text-base font-semibold capitalize">
+                      {value.nama_user}
+                    </div>
+                    <div className="font-normal text-gray-500">
+                      {value.username}
+                    </div>
+                  </div>
+                </th>
+                <td className="py-4 px-6">{value.id}</td>
+                <td className="py-4 px-6">
+                  <div className="flex items-center">
+                    <div
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        value.user_level === "user" ? "bg-green" : "bg-red"
+                      } mr-2`}
+                    />
+                    {value.user_level}
+                  </div>
+                </td>
+                <td className="py-4 px-6 flex items-center justify-between">
+                  <Link
+                    to={""}
+                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Edit user
+                  </Link>
+                  <span className="font-medium">
+                    <button>
+                      <svg
+                        className="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-white p-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        ></path>
+                      </svg>
+                    </button>
+                  </span>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {user.map((val, index) => (
-                <tr className={`${(index + 1) % 2 === 0 ? "bg-gray-50" : ""}`}>
-                  <td className="p-4">{index + 1}.</td>
-                  <td>201110057</td>
-                  <td>In'am Falahuddin</td>
-                  <td>inamfalahuddin@gmail.com</td>
-                  <td>
-                    <table>
-                      <tr>
-                        <td>
-                          <button className="bg-blue text-white text-sm py-1 px-2 rounded-md">
-                            edit
-                          </button>
-                        </td>
-                        <td>
-                          <button className="bg-red text-white text-sm py-1 px-2 rounded-md">
-                            delete
-                          </button>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="p-5 my-5 border rounded-md">
-          <p>Total data mahasiswa 250</p>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

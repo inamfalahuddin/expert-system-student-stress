@@ -11,6 +11,8 @@ import SplashScreen from "./pages/SplashScreen.";
 import DashboardPage from "./pages/admin/DashboardPage";
 import Dimensions from "./pages/admin/Dimensions";
 import Consultation from "./pages/admin/Consultation";
+import TestResult from "./pages/admin/TestResult";
+import User from "./pages/admin/User";
 
 function App() {
   return (
@@ -90,6 +92,26 @@ function App() {
             <AppProvider>
               <DashboardPage>
                 <Consultation />
+              </DashboardPage>
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/admin/test"
+          element={
+            <AppProvider>
+              <DashboardPage>
+                <TestResult />
+              </DashboardPage>
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/admin/user"
+          element={
+            <AppProvider>
+              <DashboardPage>
+                <User />
               </DashboardPage>
             </AppProvider>
           }

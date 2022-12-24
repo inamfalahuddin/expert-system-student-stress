@@ -97,7 +97,7 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              href="#"
+              to={"/admin/test"}
               className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
             >
               <svg
@@ -120,7 +120,7 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              href="#"
+              to={"/admin/user"}
               className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
             >
               <svg
