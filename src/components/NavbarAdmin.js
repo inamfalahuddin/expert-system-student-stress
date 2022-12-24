@@ -1,11 +1,17 @@
 import React from "react";
+import { useAppContext } from "../context/app-context";
 
-function NavbarAdmin({ title }) {
+function NavbarAdmin() {
+  const [state, dispatch] = useAppContext();
+
   return (
     <div className="sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5">
       <div className="px-10 flex items-center justify-between space-x-4 2xl:container">
-        <h5 hidden className="text-2xl text-gray-600 font-medium lg:block">
-          {title}
+        <h5
+          hidden
+          className="text-2xl text-gray-600 font-medium lg:block animate-scale capitalize"
+        >
+          {state.sidebarIsActive}
         </h5>
         <button className="w-12 h-16 -mr-2 border-r lg:hidden">
           <svg

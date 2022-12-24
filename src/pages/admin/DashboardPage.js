@@ -14,7 +14,7 @@ function DashboardPage({ children }) {
         className="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%] pb-20"
         style={{ background: "#edf2f7" }}
       >
-        <NavbarAdmin title={"Dashboard"} />
+        <NavbarAdmin />
         <div className="p-10">{children}</div>
       </div>
     </div>

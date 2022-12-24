@@ -8,8 +8,6 @@ function Navbar({ name }) {
   const navigate = useNavigate();
 
   const logout = async () => {
-    const Cookie = document.cookie;
-
     try {
       const { data } = await axios.delete(
         "http://192.168.18.253:5000/user/logout"

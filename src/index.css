@@ -5,7 +5,7 @@ body {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fffff !important;
+  background-color: #ffff !important;
 }
 
 code {
@@ -22,7 +22,7 @@ code {
 }
 
 .nav-actived {
-  @apply text-white bg-gradient-to-r from-sky-600 to-cyan-400;
+  @apply text-white bg-gradient-to-r from-sky-600 to-cyan-400 animate-scale;
 }
 
 html {

@@ -17,7 +17,8 @@ function TestResult() {
       console.log(err);
     }
   };
-  return (
+
+  return hasil ? (
     <>
       <h2 className="text-xl text-gray-600 font-medium mb-5">
         Hasil Tes Mahasiswa
@@ -126,6 +127,8 @@ function TestResult() {
         </div>
       </div>
     </>
+  ) : (
+    <span>Loading...</span>
   );
 }
 

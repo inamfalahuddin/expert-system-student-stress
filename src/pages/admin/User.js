@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../../components/Button";
-import NavbarAdmin from "../../components/NavbarAdmin2";
 
 function User() {
   const [user, setUser] = useState([]);
@@ -19,6 +18,21 @@ function User() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const generateRandomColor = () => {
+    const x = Math.floor(Math.random() * 256);
+    const y = Math.floor(Math.random() * 256);
+    const z = Math.floor(Math.random() * 256);
+    const colorCode = "rgb(" + x + "," + y + "," + z + ")";
+
+    return colorCode;
+  };
+
+  const generateCharacterOfName = (name) => {
+    const firstName = name.split(" ")[0];
+
+    return firstName.split("")[0];
   };
 
   return (
@@ -70,8 +84,11 @@ function User() {
                   scope="row"
                   className="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  <div className="w-10 h-10 rounded-full bg-orange flex items-center justify-center text-xl text-white">
-                    R
+                  <div
+                    className="w-10 h-10 rounded-full bg-orange flex items-center justify-center text-xl text-white capitalize"
+                    style={{ backgroundColor: generateRandomColor() }}
+                  >
+                    {generateCharacterOfName(value.nama_user)}
                   </div>
                   <div className="pl-3">
                     <div className="text-base font-semibold capitalize">

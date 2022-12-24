@@ -14,7 +14,7 @@ const intialState = {
   answers: array(questions.length),
   isLoading: true,
   isAuth: false,
-  cookie: "",
+  sidebarIsActive: "dashboard",
 };
 
 const reducer = (state, action) => {
@@ -42,8 +42,8 @@ const reducer = (state, action) => {
       return { ...state, isLoading: action.payload };
     case "SET_AUTH":
       return { ...state, isAuth: action.payload };
-    case "SET_COOKIE":
-      return { ...state, cookie: action.payload };
+    case "SET_SIDEBAR":
+      return { ...state, sidebarIsActive: action.payload };
     default:
       throw new Error();
   }

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-function Card({ color }) {
+function Card({ color, data }) {
   const [profileColor, setProfileColor] = useState("");
+  const [stresId, setStresId] = useState("");
+
+  const stres = ["ringan", "sedang", "berat"];
+
   const colors = {
     red: "#ef4444",
     orange: "#f97316",
@@ -10,6 +14,9 @@ function Card({ color }) {
   };
 
   useEffect(() => {
+    const stresId = Number(data.id_tingkat_stres.match(/\d/g).join("")) - 1;
+    setStresId(stresId);
+
     detBgColor();
   }, []);
 
@@ -21,6 +28,12 @@ function Card({ color }) {
     return setProfileColor("salmon");
   };
 
+  const generateCharacterOfName = (name) => {
+    const firstName = name.split(" ")[0];
+
+    return firstName.split("")[0];
+  };
+
   return (
     <div className="bg-white py-4 px-5 mb-5 flex items-center justify-between rounded-lg transition-all">
       <div className={`flex items-center gap-5`}>
@@ -28,14 +41,16 @@ function Card({ color }) {
           className={`w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center text-white`}
           style={{ backgroundColor: profileColor }}
         >
-          <h2 className="text-xl font-bold">R</h2>
+          <h2 className="text-xl font-bold">
+            {generateCharacterOfName(data.nama_user)}
+          </h2>
         </div>
         <div>
-          <h3 className="text-md font-bold">Leonardo Silvia</h3>
+          <h3 className="text-md font-bold">{data.nama_user}</h3>
           <span className="text-gray-400 text-sm">3 jam yang lalu</span>
         </div>
       </div>
-      <span className="text-sm font-medium">sedang</span>
+      <span className="text-sm font-medium">{stres[stresId]}</span>
     </div>
   );
 }
