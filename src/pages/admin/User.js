@@ -20,6 +20,9 @@ function User() {
   const [userLevel, setUserLevel] = useState("");
 
   const [openForm, setOpenForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+
+  const [userSelect, setUserSelect] = useState({});
 
   useEffect(() => {
     getUser();
@@ -102,14 +105,45 @@ function User() {
         user_level: userLevel,
       });
 
-      // setName("");
-      // setEmail("");
-      // setPassword("");
+      setName("");
+      setEmail("");
+      setPassword("");
 
       getUser();
+      setOpenForm(false);
       setMessage({ msg: data.message, color: "success" });
     } catch (err) {
       setMessage({ msg: err.response.data.message, color: "danger" });
+    }
+  };
+
+  const editUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axiosJWT.put(
+        `http://192.168.18.253:5000/user/${userSelect.id}`,
+        {
+          nama_user: userSelect.name,
+          username: userSelect.username,
+          user_level: userSelect.level,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      getUser();
+      setOpenEditForm(false);
+      return setMessage({
+        msg: `Update ${userSelect.name} berhasil`,
+        color: "success",
+      });
+    } catch (err) {
+      console.log(err);
+      return setMessage({
+        msg: `Update ${userSelect.name} gagal`,
+        color: "danger",
+      });
     }
   };
 
@@ -132,16 +166,19 @@ function User() {
         </div>
       </div>
 
+      {message.msg !== undefined ? (
+        <Alert message={message.msg} bgColor={message.color} />
+      ) : (
+        ""
+      )}
+
+      {/* tambah data */}
       {openForm ? (
         <div className="overflow-x-auto relative shadow-md sm:rounded-lg col-span-2 mb-10 bg-white p-4 animate-scale">
           <h2 className="my-2 font-medium text-md text-gray-500">
             Tambah Data Mahasiwa
           </h2>
-          {message.msg !== undefined ? (
-            <Alert message={message.msg} bgColor={message.color} />
-          ) : (
-            ""
-          )}
+
           <form className="grid lg:grid-cols-2 gap-5">
             <input
               type="text"
@@ -221,6 +258,76 @@ function User() {
         ""
       )}
 
+      {/* edit data */}
+      {openEditForm ? (
+        <div className="overflow-x-auto relative shadow-md sm:rounded-lg col-span-2 mb-10 bg-white p-4 animate-scale">
+          <h2 className="my-2 font-medium text-md text-gray-500">
+            Edit Data Mahasiwa
+          </h2>
+
+          <form className="grid lg:grid-cols-2 gap-5">
+            <span className="border bg-slate-50 w-full p-2 px-4 rounded-md animate-fadeInX opacity-0 text-gray-500">
+              {userSelect.id}
+            </span>
+            <input
+              type="text"
+              className="border outline-primary w-full p-2 px-4 rounded-md animate-fadeInX opacity-0"
+              // placeholder={userSelect.name}
+              style={{ animationDelay: ".2s" }}
+              value={userSelect.name}
+              onChange={(e) =>
+                setUserSelect({
+                  ...userSelect,
+                  name: e.target.value,
+                })
+              }
+            />
+            <input
+              type="email"
+              className="border outline-primary w-full p-2 px-4 rounded-md animate-fadeInX opacity-0"
+              placeholder={userSelect.email}
+              style={{ animationDelay: ".2s" }}
+              value={userSelect.email}
+              onChange={(e) =>
+                setUserSelect({
+                  ...userSelect,
+                  email: e.target.value,
+                })
+              }
+            />
+
+            <select
+              id="userLevel"
+              className="animate-fadeIn opacity-0 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-primary"
+              style={{ animationDelay: ".2s" }}
+              value={userSelect.level}
+              onChange={(e) =>
+                setUserSelect({
+                  ...userSelect,
+                  level: e.target.value,
+                })
+              }
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+            <span>
+              <span className="pr-5" onClick={editUser}>
+                <Button text="Submit" color="primary" />
+              </span>
+              <span
+                className="pr-5"
+                onClick={(() => setOpenEditForm(false), editUser)}
+              >
+                <Button text="Close" color="danger" />
+              </span>
+            </span>
+          </form>
+        </div>
+      ) : (
+        ""
+      )}
+
       <div className="overflow-x-auto relative shadow-md sm:rounded-lg col-span-2">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -284,10 +391,43 @@ function User() {
                   <Link
                     to={""}
                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    onClick={() => {
+                      setOpenEditForm(true);
+                      setUserSelect({
+                        id: value.id,
+                        name: value.nama_user,
+                        email: value.username,
+                        level: value.user_level,
+                      });
+                    }}
                   >
                     Edit user
                   </Link>
-                  <span className="font-medium">
+                  <span
+                    className="font-medium"
+                    onClick={async () => {
+                      try {
+                        await axiosJWT.delete(
+                          `http://192.168.18.253:5000/user/${value.id}`,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${token}`,
+                            },
+                          }
+                        );
+                        getUser();
+                        return setMessage({
+                          msg: `Berhasil menghapus user dengan id ${value.id}`,
+                          color: "success",
+                        });
+                      } catch (err) {
+                        return setMessage({
+                          msg: `Gagal menghapus user dengan id ${value.id}`,
+                          color: "danger",
+                        });
+                      }
+                    }}
+                  >
                     <button>
                       <svg
                         className="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-white p-1"

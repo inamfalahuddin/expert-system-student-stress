@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "../../components/Button";
 import { useAppContext } from "../../context/app-context";
 
@@ -125,7 +126,9 @@ function TestResult() {
                       <div className="text-left">{value.tingkat_stres}</div>
                     </td>
                     <td className="p-2 whitespace-nowrap flex items-center gap-10">
-                      <Button text="Edit" color="primary" />
+                      <Link to={`/admin/test/${value.id_user}/${value.sesi}`}>
+                        <Button text="Detail" color="primary" />
+                      </Link>
                       <span className="font-medium">
                         <button>
                           <svg

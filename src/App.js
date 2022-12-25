@@ -15,6 +15,7 @@ import TestResult from "./pages/admin/TestResult";
 import User from "./pages/admin/User";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
+import InferenceAdmin from "./pages/admin/InferenceAdmin";
 
 function App() {
   const [expToken, setExpToken] = useState("");
@@ -136,6 +137,16 @@ function App() {
             <AppProvider>
               <DashboardPage>
                 <User />
+              </DashboardPage>
+            </AppProvider>
+          }
+        />
+        <Route
+          path="/admin/test/:id/:sesi"
+          element={
+            <AppProvider>
+              <DashboardPage>
+                <InferenceAdmin />
               </DashboardPage>
             </AppProvider>
           }

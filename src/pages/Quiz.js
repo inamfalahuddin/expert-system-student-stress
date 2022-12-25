@@ -45,16 +45,17 @@ function Quiz() {
   };
 
   const btnFinish = async () => {
-    console.log(state.answers);
     try {
-      const { data } = await axiosJWT.post(
+      await axiosJWT.post(
         "http://192.168.18.253:5000/quiz/answers",
+        {
+          username: username,
+          answers: state.answers,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          username: username,
-          answers: state.answers,
         }
       );
     } catch (err) {
