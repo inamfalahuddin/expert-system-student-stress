@@ -12,7 +12,7 @@ function Alert({ message, bgColor }) {
       ? "bg-yellow-50 text-yellow-700"
       : "bg-slate-50";
   return (
-    <div className={`${background} m-5 p-4 rounded-md animate-fadeIn text-sm`}>
+    <div className={`${background} my-4 p-4 rounded-md animate-fadeIn text-sm`}>
       <p>{message}</p>
     </div>
   );

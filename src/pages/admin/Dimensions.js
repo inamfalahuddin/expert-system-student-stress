@@ -1,25 +1,50 @@
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
+import { useAppContext } from "../../context/app-context";
 
 function Dimensions() {
   const [dimensi, setDimensi] = useState([]);
+  const [expToken, setExpToken] = useState("");
+  const [state, dispatch] = useAppContext();
 
   useEffect(() => {
     document.body.classList = "lg:h-screen";
 
     getDimensi();
+    dispatch({ type: "SET_SIDEBAR", payload: "dimension" });
   }, []);
 
   const getDimensi = async () => {
     try {
-      const { data } = await axios.get("http://192.168.18.253:5000/dimensi");
+      const { data } = await axiosJWT.get("http://192.168.18.253:5000/dimensi");
 
       setDimensi(data.payload.data);
     } catch (err) {
       console.log(err);
     }
   };
+
+  const axiosJWT = axios.create();
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
+      if (expToken * 1000 < currentDate.getTime()) {
+        const { data } = await axios.get(
+          "http://192.168.18.253:5000/user/token"
+        );
+        config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
+
+        const decoded = jwtDecode(data.payload.data.accessToken);
+        setExpToken(decoded.exp);
+      }
+      return config;
+    },
+    (err) => {
+      return Promise.reject(err);
+    }
+  );
 
   return (
     <>

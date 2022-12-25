@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
@@ -34,9 +35,16 @@ function Login() {
         username: email,
         password: password,
       });
+      const checkUserLevel = jwtDecode(
+        data.payload.data.accessToken
+      ).user_level;
+
+      if (checkUserLevel === "admin") {
+        return navigate("/admin/dashboard");
+      }
 
       setMessage({ msg: data.message, color: "success" });
-      navigate("/quiz");
+      return navigate("/quiz");
     } catch (err) {
       setMessage({ msg: err.response.data.message, color: "danger" });
       console.log(err);

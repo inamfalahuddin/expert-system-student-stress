@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/app-context";
 import Dashboard from "./pages/admin/Dashboard";
@@ -13,8 +13,32 @@ import Dimensions from "./pages/admin/Dimensions";
 import Consultation from "./pages/admin/Consultation";
 import TestResult from "./pages/admin/TestResult";
 import User from "./pages/admin/User";
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 function App() {
+  const [expToken, setExpToken] = useState("");
+
+  const axiosJWT = axios.create();
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
+      if (expToken * 1000 < currentDate.getTime()) {
+        const { data } = await axios.get(
+          "http://192.168.18.253:5000/user/token"
+        );
+        config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
+
+        const decoded = jwtDecode(data.payload.data.accessToken);
+        setExpToken(decoded.exp);
+      }
+      return config;
+    },
+    (err) => {
+      return Promise.reject(err);
+    }
+  );
+
   return (
     <Fragment>
       <Routes>

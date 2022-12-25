@@ -1,13 +1,35 @@
+import axios from "axios";
+import jwtDecode from "jwt-decode";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import NavbarAdmin from "../../components/NavbarAdmin";
 import Sidebar from "../../components/Sidebar";
+import { useAppContext } from "../../context/app-context";
 
 function DashboardPage({ children }) {
+  const navigate = useNavigate();
+  const [state, dispatch] = useAppContext();
+
   useEffect(() => {
     document.body.style = "background-color: #edf2f7";
+
+    checkIsAdmin();
   }, []);
 
-  return (
+  const checkIsAdmin = async () => {
+    const { data } = await axios.get("http://192.168.18.253:5000/user/token");
+
+    const checkUserLevel = jwtDecode(data.payload.data.accessToken).user_level;
+    if (checkUserLevel !== "admin") {
+      return navigate("/quiz");
+    }
+
+    dispatch({ type: "SET_LOADING", payload: false });
+  };
+
+  return state.isLoading ? (
+    "Redirect ..."
+  ) : (
     <div>
       <Sidebar />
       <div

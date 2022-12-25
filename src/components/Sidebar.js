@@ -1,10 +1,26 @@
+import axios from "axios";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/app-context";
 import UmbyIcon from "../images/logo-umby.png";
 
 function Sidebar() {
   const [state, dispatch] = useAppContext();
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      const { data } = await axios.delete(
+        "http://192.168.18.253:5000/user/logout"
+      );
+
+      console.log(data);
+
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <aside className="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
@@ -228,7 +244,10 @@ function Sidebar() {
         </ul>
       </div>
       <div className="px-6 -mx-6 pt-4 flex justify-between items-center border-t">
-        <button className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
+        <button
+          className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+          onClick={logout}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

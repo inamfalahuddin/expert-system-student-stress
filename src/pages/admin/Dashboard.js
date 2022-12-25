@@ -3,6 +3,8 @@ import Card from "../../components/Card";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
+import { useAppContext } from "../../context/app-context";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,6 +14,10 @@ function Dashboard() {
   const [userRecent, setUserRecent] = useState([]);
   const [userByScore, setUserByScore] = useState([]);
 
+  // token
+  const [expToken, setExpToken] = useState("");
+  const [state, dispatch] = useAppContext();
+
   const color = ["red", "orange", "blue", "green"];
 
   useEffect(() => {
@@ -19,11 +25,13 @@ function Dashboard() {
     getDimensi();
     getUserRecent();
     getUserByScore();
+
+    dispatch({ type: "SET_SIDEBAR", payload: "dashboard" });
   }, []);
 
   const getDataResult = async () => {
     try {
-      const { data } = await axios.get("http://192.168.18.253:5000/result/");
+      const { data } = await axiosJWT.get("http://192.168.18.253:5000/result/");
       const result = data.payload.data;
 
       const TSRendah = result.filter(
@@ -49,7 +57,7 @@ function Dashboard() {
 
   const getDimensi = async () => {
     try {
-      const { data } = await axios.get("http://192.168.18.253:5000/dimensi");
+      const { data } = await axiosJWT.get("http://192.168.18.253:5000/dimensi");
 
       setDimensi(data.payload.data);
     } catch (err) {
@@ -59,7 +67,7 @@ function Dashboard() {
 
   const getUserRecent = async () => {
     try {
-      const { data } = await axios.get(
+      const { data } = await axiosJWT.get(
         "http://192.168.18.253:5000/result/?recent=3"
       );
 
@@ -71,7 +79,7 @@ function Dashboard() {
 
   const getUserByScore = async () => {
     try {
-      const { data } = await axios.get(
+      const { data } = await axiosJWT.get(
         "http://192.168.18.253:5000/result/?limit=5"
       );
 
@@ -80,6 +88,26 @@ function Dashboard() {
       console.log(err);
     }
   };
+
+  const axiosJWT = axios.create();
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
+      if (expToken * 1000 < currentDate.getTime()) {
+        const { data } = await axios.get(
+          "http://192.168.18.253:5000/user/token"
+        );
+        config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
+
+        const decoded = jwtDecode(data.payload.data.accessToken);
+        setExpToken(decoded.exp);
+      }
+      return config;
+    },
+    (err) => {
+      return Promise.reject(err);
+    }
+  );
 
   const data = {
     labels: ["Ringan", "Sedang", "Berat"],

@@ -15,6 +15,7 @@ const intialState = {
   isLoading: true,
   isAuth: false,
   sidebarIsActive: "dashboard",
+  dataDashboard: {},
 };
 
 const reducer = (state, action) => {
@@ -44,6 +45,8 @@ const reducer = (state, action) => {
       return { ...state, isAuth: action.payload };
     case "SET_SIDEBAR":
       return { ...state, sidebarIsActive: action.payload };
+    case "SET_DATA_DASHBOARD":
+      return { ...state, dataDashboard: action.payload };
     default:
       throw new Error();
   }
