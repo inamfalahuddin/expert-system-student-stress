@@ -38,6 +38,7 @@ function Login() {
       ).user_level;
 
       if (checkUserLevel === "admin") {
+        setMessage({ msg: data.message, color: "danger" });
         return navigate("/admin/dashboard");
       }
 

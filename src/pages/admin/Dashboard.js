@@ -27,6 +27,7 @@ function Dashboard() {
     getUserByScore();
 
     dispatch({ type: "SET_SIDEBAR", payload: "dashboard" });
+    // alert("Halaman ini belum responsive pada mode mobile");
   }, []);
 
   const getDataResult = async () => {
