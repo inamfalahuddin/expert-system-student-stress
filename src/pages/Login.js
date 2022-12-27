@@ -1,13 +1,11 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
-import { useAppContext } from "../context/app-context";
 
 function Login() {
-  const [state, dispatch] = useAppContext();
   const [time, setTime] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
 
@@ -30,7 +28,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const endpoint = "http://192.168.18.253:5000/user/login";
+      const endpoint = `http://${process.env.REACT_APP_HOST}:5000/user/login`;
       const { data } = await axios.post(endpoint, {
         username: email,
         password: password,
@@ -53,7 +51,9 @@ function Login() {
 
   const refreshToken = async () => {
     try {
-      const { data } = await axios.get("http://192.168.18.253:5000/user/token");
+      const { data } = await axios.get(
+        `http://${process.env.REACT_APP_HOST}:5000/user/token`
+      );
 
       navigate("/quiz");
     } catch (err) {

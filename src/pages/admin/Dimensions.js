@@ -18,7 +18,9 @@ function Dimensions() {
 
   const getDimensi = async () => {
     try {
-      const { data } = await axiosJWT.get("http://192.168.18.253:5000/dimensi");
+      const { data } = await axiosJWT.get(
+        `http://${process.env.REACT_APP_HOST}:5000/dimensi`
+      );
 
       setDimensi(data.payload.data);
     } catch (err) {
@@ -32,7 +34,7 @@ function Dimensions() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
 

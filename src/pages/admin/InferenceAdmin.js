@@ -12,9 +12,13 @@ function InferenceAdmin() {
   const [state, dispatch] = useAppContext();
   const { id, sesi } = useParams();
   const [rule, setRule] = useState([]);
+  const [score, setScore] = useState(0);
+  const [name, setName] = useState("");
+  const [tingkatStres, setTingkatStres] = useState("");
 
   useEffect(() => {
     getInference();
+    getResult();
 
     setRule(Indicators());
     dispatch({ type: "SET_SIDEBAR", payload: "test" });
@@ -26,7 +30,7 @@ function InferenceAdmin() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
 
@@ -43,9 +47,32 @@ function InferenceAdmin() {
   const getInference = async () => {
     try {
       const { data } = await axiosJWT.get(
-        `http://192.168.18.253:5000/quiz/inference?id=${id}&sesi=${sesi}`
+        `http://${process.env.REACT_APP_HOST}:5000/quiz/inference?id=${id}&sesi=${sesi}`
       );
-      setHasil(data.payload.data.inference);
+      const response = data.payload.data.inference;
+
+      let dataAlpha = response.map((data) => data.a_predikat);
+      let dataZ = response.map((data) => data.z);
+
+      setScore(zScore(dataAlpha, dataZ));
+
+      setHasil(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getResult = async () => {
+    try {
+      const { data } = await axiosJWT.get(
+        `http://192.168.18.253:5000/result?id=${id}&sesi=${sesi}`
+      );
+      const response = data.payload.data[0];
+
+      setName(response.nama_user);
+      setTingkatStres(response.tingkat_stres);
+
+      console.log(response);
     } catch (err) {
       console.log(err);
     }
@@ -66,6 +93,17 @@ function InferenceAdmin() {
     return result;
   };
 
+  const zScore = (aPredikat, z) => {
+    let resultOfZ = 0;
+    let resultOfAlpha = 0;
+    for (let i = 0; i < z.length; i++) {
+      resultOfZ += z[i] * aPredikat[i];
+      resultOfAlpha += aPredikat[i];
+    }
+
+    return Number((resultOfZ / resultOfAlpha).toFixed(2));
+  };
+
   return hasil ? (
     <>
       <h2 className="text-xl text-gray-600 font-medium mb-5">
@@ -74,11 +112,26 @@ function InferenceAdmin() {
       <Link to={"/admin/test"}>
         <Button text="← Back" color="primary" />
       </Link>
+      {/* inference engine */}
       <div className="w-full mx-auto bg-white rounded-lg my-10">
         <header className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-xl text-gray-600 font-medium mb-5">
-            Hasil Tes {id}
-          </h2>
+          {/* <h2 className="text-xl text-gray-600 font-medium">
+            Hasil Tes {id} - Sesi {sesi}
+          </h2> */}
+          <table className="text-xl text-gray-600 font-medium lg:w-1/2">
+            <tbody>
+              <tr>
+                <td>ID User</td>
+                <td>:</td>
+                <td>{id}</td>
+              </tr>
+              <tr>
+                <td>Nama User</td>
+                <td>:</td>
+                <td className="capitalize">{name ? name : "Loading ..."}</td>
+              </tr>
+            </tbody>
+          </table>
         </header>
         <div className="p-3">
           <div className="overflow-x-auto">
@@ -176,6 +229,97 @@ function InferenceAdmin() {
               </table>
             </code>
           </div>
+        </div>
+      </div>
+
+      {/* difuzzyfikasi */}
+      <div className="w-full mx-auto bg-white rounded-lg my-10">
+        <header className="px-5 py-4 border-b border-gray-100">
+          <h2 className="text-xl text-gray-600 font-medium">Fuzzifikasi</h2>
+        </header>
+        <div className="p-3">
+          <div className="overflow-x-auto">
+            <code>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>Z</td>
+                    <td width="40" className="text-center">
+                      =
+                    </td>
+                    <td className="border-b border-gray-500 text-center">
+                      {hasil.map((value, i) => (
+                        <span key={i}>
+                          ({value.a_predikat}
+                          <b className="text-red">*</b>
+                          {value.z}){i !== 26 ? "+" : ""}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td width="40" className="text-center"></td>
+                    <td className="text-center">
+                      {hasil.map((value, i) => (
+                        <span key={i}>
+                          {value.a_predikat}
+                          {i !== 26 ? <b className="text-red">*</b> : ""}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Z</td>
+                    <td width="40" className="text-center">
+                      =
+                    </td>
+                    <td className="border-b border-gray-500">
+                      {hasil.map((value, i) => (
+                        <span key={i}>
+                          {value.a_predikat * value.z}
+                          {i !== 26 ? <b className="text-red">+</b> : ""}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td width="40" className="text-center"></td>
+                    <td className="">
+                      {hasil.map((value, i) => (
+                        <span key={i}>
+                          {value.a_predikat}
+                          {i !== 26 ? <b className="text-red">+</b> : ""}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Z</td>
+                    <td width="40" className="text-center">
+                      =
+                    </td>
+                    <td>{score}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </code>
+          </div>
+        </div>
+      </div>
+
+      {/* difuzzyfikasi */}
+      <div className="w-full mx-auto bg-white rounded-lg my-10">
+        <header className="px-5 py-4 border-b border-gray-100">
+          <h2 className="text-xl text-gray-600 font-medium">Kesimpulan</h2>
+        </header>
+        <div className="p-3">
+          <p className="text-gray-600 px-2">
+            Dari hasil analisisi sistem, didapatkan bahwa{" "}
+            <b className="capitalize">{name}</b> memiliki kecenderungan tingkat{" "}
+            <b>{tingkatStres}</b>.
+          </p>
         </div>
       </div>
     </>

@@ -44,7 +44,7 @@ function Register() {
         return setMessage({ msg: "Password wajib diisi", color: "danger" });
       }
 
-      const url = "http://192.168.18.253:5000/user/register";
+      const url = `http://${process.env.REACT_APP_HOST}:5000/user/register`;
       const { data } = await axios.post(url, {
         nama: name,
         username: email,
@@ -63,7 +63,9 @@ function Register() {
 
   const refreshToken = async () => {
     try {
-      const { data } = await axios.get("http://192.168.18.253:5000/user/token");
+      const { data } = await axios.get(
+        `http://${process.env.REACT_APP_HOST}:5000/user/token`
+      );
 
       navigate("/quiz");
     } catch (err) {

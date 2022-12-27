@@ -18,7 +18,7 @@ function Consultation() {
   const getKonsultasi = async () => {
     try {
       const { data } = await axiosJWT.get(
-        "http://192.168.18.253:5000/konsultasi/"
+        `http://${process.env.REACT_APP_HOST}:5000/konsultasi/`
       );
 
       setKonsultasi(data.payload.data);
@@ -34,7 +34,7 @@ function Consultation() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
 
@@ -146,8 +146,7 @@ function Consultation() {
                     <td className="p-2 whitespace-nowrap">
                       <div className="text-left">{value.sesi}</div>
                     </td>
-                    <td className="p-2 whitespace-nowrap flex items-center gap-10">
-                      <Button text="Edit" color="primary" />
+                    <td className="p-2 whitespace-nowrap">
                       <span className="font-medium">
                         <button>
                           <svg

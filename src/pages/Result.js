@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import jwt_decode from "jwt-decode";
 import Inference from "../components/Inference";
-import { useAppContext } from "../context/app-context";
 import Navbar from "../components/Navbar";
 
 function Result() {
@@ -21,7 +20,7 @@ function Result() {
   const [inference, setInference] = useState([]);
   const [render, setRender] = useState(false);
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(0);
 
   useEffect(() => {
     document.title = "ES | Hasil";
@@ -37,7 +36,7 @@ function Result() {
   const getResult = async (id) => {
     try {
       const result = await axios.get(
-        `http://192.168.18.253:5000/user/result?id=${id}&session=0`,
+        `http://${process.env.REACT_APP_HOST}:5000/user/result?id=${id}&session=0`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,7 +45,7 @@ function Result() {
       );
 
       const answer = await axios.get(
-        `http://192.168.18.253:5000/quiz/answers?id=${id}`,
+        `http://${process.env.REACT_APP_HOST}:5000/quiz/answers?id=${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -81,7 +80,7 @@ function Result() {
   const getInference = async () => {
     try {
       const { data } = await axios.get(
-        `http://192.168.18.253:5000/quiz/inference?id=${id}`,
+        `http://${process.env.REACT_APP_HOST}:5000/quiz/inference?id=${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -96,7 +95,9 @@ function Result() {
 
   const refreshToken = async () => {
     try {
-      const { data } = await axios.get("http://192.168.18.253:5000/user/token");
+      const { data } = await axios.get(
+        `http://${process.env.REACT_APP_HOST}:5000/user/token`
+      );
 
       setToken(data.payload.data.accessToken);
 

@@ -9,7 +9,7 @@ import { useAppContext } from "../../context/app-context";
 function User() {
   const [user, setUser] = useState([]);
   const [expToken, setExpToken] = useState([]);
-  const [state, dispatch] = useAppContext();
+  const [, dispatch] = useAppContext();
   const [token, setToken] = useState("");
 
   const [name, setName] = useState("");
@@ -36,7 +36,7 @@ function User() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
 
@@ -53,11 +53,14 @@ function User() {
 
   const getUser = async () => {
     try {
-      const { data } = await axiosJWT.get("http://192.168.18.253:5000/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await axiosJWT.get(
+        `http://${process.env.REACT_APP_HOST}:5000/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setUser(data.payload.data);
     } catch (err) {
@@ -97,7 +100,7 @@ function User() {
         return setMessage({ msg: "Password wajib diisi", color: "danger" });
       }
 
-      const url = `http://192.168.18.253:5000/user/register/?level=${userLevel}`;
+      const url = `http://${process.env.REACT_APP_HOST}:5000/user/register/?level=${userLevel}`;
       const { data } = await axios.post(url, {
         nama: name,
         username: email,
@@ -122,7 +125,7 @@ function User() {
 
     try {
       await axiosJWT.put(
-        `http://192.168.18.253:5000/user/${userSelect.id}`,
+        `http://${process.env.REACT_APP_HOST}:5000/user/${userSelect.id}`,
         {
           nama_user: userSelect.name,
           username: userSelect.username,
@@ -315,10 +318,7 @@ function User() {
               <span className="pr-5" onClick={editUser}>
                 <Button text="Submit" color="primary" />
               </span>
-              <span
-                className="pr-5"
-                onClick={(() => setOpenEditForm(false), editUser)}
-              >
+              <span className="pr-5" onClick={() => setOpenEditForm(false)}>
                 <Button text="Close" color="danger" />
               </span>
             </span>
@@ -408,7 +408,7 @@ function User() {
                     onClick={async () => {
                       try {
                         await axiosJWT.delete(
-                          `http://192.168.18.253:5000/user/${value.id}`,
+                          `http://${process.env.REACT_APP_HOST}:5000/user/${value.id}`,
                           {
                             headers: {
                               Authorization: `Bearer ${token}`,

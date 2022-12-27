@@ -18,19 +18,29 @@ function DashboardPage({ children }) {
   }, []);
 
   const checkIsAdmin = async () => {
-    const { data } = await axios.get("http://192.168.18.253:5000/user/token");
+    try {
+      const { data } = await axios.get(
+        `http://${process.env.REACT_APP_HOST}:5000/user/token`
+      );
 
-    const decoded = jwtDecode(data.payload.data.accessToken);
-    const checkUserLevel = decoded.user_level;
-    const name = decoded.nama_user;
+      const decoded = jwtDecode(data.payload.data.accessToken);
+      const checkUserLevel = decoded.user_level;
+      const name = decoded.nama_user;
 
-    setFullName(name);
+      setFullName(name);
 
-    if (checkUserLevel !== "admin") {
-      return navigate("/quiz");
+      if (checkUserLevel === "admin") {
+        dispatch({ type: "SET_LOADING", payload: false });
+        return navigate("/admin/dashboard");
+      }
+
+      return navigate("/");
+    } catch (err) {
+      console.log(err.response.status);
+      if (err.response.status === 403) {
+        return navigate("/");
+      }
     }
-
-    dispatch({ type: "SET_LOADING", payload: false });
   };
 
   return state.isLoading ? (

@@ -31,7 +31,9 @@ function Dashboard() {
 
   const getDataResult = async () => {
     try {
-      const { data } = await axiosJWT.get("http://192.168.18.253:5000/result/");
+      const { data } = await axiosJWT.get(
+        `http://${process.env.REACT_APP_HOST}:5000/result/`
+      );
       const result = data.payload.data;
 
       const TSRendah = result.filter(
@@ -57,7 +59,9 @@ function Dashboard() {
 
   const getDimensi = async () => {
     try {
-      const { data } = await axiosJWT.get("http://192.168.18.253:5000/dimensi");
+      const { data } = await axiosJWT.get(
+        `http://${process.env.REACT_APP_HOST}:5000/dimensi`
+      );
 
       setDimensi(data.payload.data);
     } catch (err) {
@@ -68,7 +72,7 @@ function Dashboard() {
   const getUserRecent = async () => {
     try {
       const { data } = await axiosJWT.get(
-        "http://192.168.18.253:5000/result/?recent=3"
+        `http://${process.env.REACT_APP_HOST}:5000/result/?recent=3`
       );
 
       setUserRecent(data.payload.data);
@@ -80,7 +84,7 @@ function Dashboard() {
   const getUserByScore = async () => {
     try {
       const { data } = await axiosJWT.get(
-        "http://192.168.18.253:5000/result/?limit=5"
+        `http://${process.env.REACT_APP_HOST}:5000/result/?limit=5`
       );
 
       setUserByScore(data.payload.data);
@@ -95,7 +99,7 @@ function Dashboard() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
 
@@ -198,7 +202,7 @@ function Dashboard() {
                     {userByScore.map((value, index) => (
                       <tr
                         key={index}
-                        className="animate-fadeInX opacity-0"
+                        className="animate-fadeInX opacity-0 capitalize"
                         style={{ animationDelay: `${index / 10}s` }}
                       >
                         <td className="p-2 whitespace-nowrap">

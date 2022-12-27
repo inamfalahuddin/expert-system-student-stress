@@ -1,7 +1,8 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Alert from "../../components/Alert";
 import Button from "../../components/Button";
 import { useAppContext } from "../../context/app-context";
 
@@ -9,6 +10,8 @@ function TestResult() {
   const [hasil, setHasil] = useState([]);
   const [expToken, setExpToken] = useState("");
   const [state, dispatch] = useAppContext();
+  const [message, setMessage] = useState({});
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     getHasil();
@@ -18,7 +21,10 @@ function TestResult() {
 
   const getHasil = async () => {
     try {
-      const { data } = await axiosJWT.get("http://192.168.18.253:5000/result/");
+      const { data } = await axiosJWT.get(
+        `http://${process.env.REACT_APP_HOST}:5000/result/`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setHasil(data.payload.data);
     } catch (err) {
       console.log(err);
@@ -31,12 +37,13 @@ function TestResult() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
 
         const decoded = jwtDecode(data.payload.data.accessToken);
         setExpToken(decoded.exp);
+        setToken(data.payload.data.accessToken);
       }
       return config;
     },
@@ -45,7 +52,7 @@ function TestResult() {
     }
   );
 
-  return hasil ? (
+  return (
     <>
       <h2 className="text-xl text-gray-600 font-medium mb-5">
         Hasil Tes Mahasiswa
@@ -58,6 +65,11 @@ function TestResult() {
         </p>
         <Button text="Tambah" color="primary" />
       </div>
+      {message.msg !== undefined ? (
+        <Alert message={message.msg} bgColor={message.color} />
+      ) : (
+        ""
+      )}
       <div className="w-full mx-auto bg-white rounded-lg">
         <header className="px-5 py-4 border-b border-gray-100">
           <h2 className="text-xl text-gray-600 font-medium mb-5">Hasil Tes</h2>
@@ -130,7 +142,29 @@ function TestResult() {
                         <Button text="Detail" color="primary" />
                       </Link>
                       <span className="font-medium">
-                        <button>
+                        <button
+                          onClick={async () => {
+                            try {
+                              await axiosJWT.delete(
+                                `http://${process.env.REACT_APP_HOST}:5000/result?id=${value.id_user}&sesi=${value.sesi}`,
+                                {
+                                  headers: { Authorization: `Bearer ${token}` },
+                                }
+                              );
+
+                              getHasil();
+                              return setMessage({
+                                msg: `Berhasil menghapus user dengan id ${value.id_user}`,
+                                color: "success",
+                              });
+                            } catch (err) {
+                              return setMessage({
+                                msg: err.message,
+                                color: "danger",
+                              });
+                            }
+                          }}
+                        >
                           <svg
                             className="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1"
                             fill="none"
@@ -156,8 +190,6 @@ function TestResult() {
         </div>
       </div>
     </>
-  ) : (
-    <span>Loading...</span>
   );
 }
 

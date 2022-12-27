@@ -47,7 +47,7 @@ function Quiz() {
   const btnFinish = async () => {
     try {
       await axiosJWT.post(
-        "http://192.168.18.253:5000/quiz/answers",
+        `http://${process.env.REACT_APP_HOST}:5000/quiz/answers`,
         {
           username: username,
           answers: state.answers,
@@ -70,7 +70,7 @@ function Quiz() {
       const currentDate = new Date();
       if (expToken * 1000 < currentDate.getTime()) {
         const { data } = await axios.get(
-          "http://192.168.18.253:5000/user/token"
+          `http://${process.env.REACT_APP_HOST}:5000/user/token`
         );
         config.headers.Authorization = `Bearer ${data.payload.data.accessToken}`;
         setToken(data.payload.data.accessToken);
@@ -92,7 +92,7 @@ function Quiz() {
   const getQuestion = async () => {
     try {
       const { data } = await axiosJWT.get(
-        "http://192.168.18.253:5000/quiz/questions",
+        `http://${process.env.REACT_APP_HOST}:5000/quiz/questions`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -11,10 +11,8 @@ function Sidebar({ name }) {
   const logout = async () => {
     try {
       const { data } = await axios.delete(
-        "http://192.168.18.253:5000/user/logout"
+        `http://${process.env.REACT_APP_HOST}:5000/user/logout`
       );
-
-      console.log(data);
 
       navigate("/login");
     } catch (err) {
