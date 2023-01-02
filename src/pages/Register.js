@@ -3,13 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
-import { useAppContext } from "../context/app-context";
 
 function Register() {
   const [time, setTime] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(true);
-  const [state, dispatch] = useAppContext();
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -69,6 +66,7 @@ function Register() {
 
       navigate("/quiz");
     } catch (err) {
+      setMessage({ msg: err.response.message, color: "danger" });
       navigate("/register");
     }
   };

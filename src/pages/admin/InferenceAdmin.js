@@ -3,8 +3,8 @@ import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Button from "../../components/Button";
+import TableRangeStres from "../../components/TableRangeStres";
 import { useAppContext } from "../../context/app-context";
-import conclusion from "../../data/conclusion.json";
 
 function InferenceAdmin() {
   const [hasil, setHasil] = useState([]);
@@ -55,7 +55,6 @@ function InferenceAdmin() {
       let dataZ = response.map((data) => data.z);
 
       setScore(zScore(dataAlpha, dataZ));
-
       setHasil(response);
     } catch (err) {
       console.log(err);
@@ -65,14 +64,12 @@ function InferenceAdmin() {
   const getResult = async () => {
     try {
       const { data } = await axiosJWT.get(
-        `http://192.168.18.253:5000/result?id=${id}&sesi=${sesi}`
+        `http://${process.env.REACT_APP_HOST}:5000/result?id=${id}&sesi=${sesi}`
       );
       const response = data.payload.data[0];
 
       setName(response.nama_user);
       setTingkatStres(response.tingkat_stres);
-
-      console.log(response);
     } catch (err) {
       console.log(err);
     }
@@ -129,6 +126,11 @@ function InferenceAdmin() {
                 <td>Nama User</td>
                 <td>:</td>
                 <td className="capitalize">{name ? name : "Loading ..."}</td>
+              </tr>
+              <tr>
+                <td>Sesi ke</td>
+                <td>:</td>
+                <td className="capitalize">{sesi ? sesi : "Loading ..."}</td>
               </tr>
             </tbody>
           </table>
@@ -307,6 +309,15 @@ function InferenceAdmin() {
             </code>
           </div>
         </div>
+      </div>
+
+      <div className="w-full mx-auto bg-white rounded-lg my-10 p-4">
+        <header className="pb-4 border-b border-gray-100">
+          <h2 className="text-xl text-gray-600 font-medium">
+            Tabel Tingkat Stres
+          </h2>
+        </header>
+        <TableRangeStres />
       </div>
 
       {/* difuzzyfikasi */}
