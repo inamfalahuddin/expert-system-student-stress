@@ -1,13 +1,17 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import Alert from "../../components/Alert";
 import Button from "../../components/Button";
 import { useAppContext } from "../../context/app-context";
 
 function Dimensions() {
   const [dimensi, setDimensi] = useState([]);
   const [expToken, setExpToken] = useState("");
+  const [token, setToken] = useState("");
   const [state, dispatch] = useAppContext();
+  const [dataUpdateDimensi, setDataUpdateDimensi] = useState({});
+  const [message, setMessage] = useState({});
 
   useEffect(() => {
     document.body.classList = "lg:h-screen";
@@ -19,7 +23,12 @@ function Dimensions() {
   const getDimensi = async () => {
     try {
       const { data } = await axiosJWT.get(
-        `http://${process.env.REACT_APP_HOST}:5000/dimensi`
+        `http://${process.env.REACT_APP_HOST}:5000/dimensi`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       setDimensi(data.payload.data);
@@ -27,6 +36,42 @@ function Dimensions() {
       console.log(err);
     }
   };
+
+  const updateDimensi = async (e) => {
+    try {
+      const { data } = await axiosJWT.put(
+        `http://${process.env.REACT_APP_HOST}:5000/dimensi/${dataUpdateDimensi.id_dimensi}`,
+        {
+          nama_dimensi: dataUpdateDimensi.nama_dimensi,
+          batas_bawah: dataUpdateDimensi.batas_bawah,
+          batas_tengah: dataUpdateDimensi.batas_tengah,
+          batas_atas: dataUpdateDimensi.batas_atas,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      getDimensi();
+      return setMessage({
+        msg: `Berhasil mengupdate dimensi dengan id ${dataUpdateDimensi.id_dimensi}`,
+        color: "success",
+      });
+    } catch (err) {
+      console.log(err);
+      return setMessage({
+        msg: err.response.message,
+        color: "danger",
+      });
+    }
+  };
+
+  const findDimensi = useCallback(
+    (e) => {
+      const result = dimensi.filter((val) => val.id_dimensi === e.target.value);
+      setDataUpdateDimensi(result[0]);
+    },
+    [dimensi]
+  );
 
   const axiosJWT = axios.create();
   axiosJWT.interceptors.request.use(
@@ -40,6 +85,7 @@ function Dimensions() {
 
         const decoded = jwtDecode(data.payload.data.accessToken);
         setExpToken(decoded.exp);
+        setToken(data.payload.data.accessToken);
       }
       return config;
     },
@@ -62,6 +108,15 @@ function Dimensions() {
           </p>
           <Button text="Tambah" color="primary" />
         </div>
+
+        <div className="col-span-2">
+          {message.msg !== undefined ? (
+            <Alert message={message.msg} bgColor={message.color} />
+          ) : (
+            ""
+          )}
+        </div>
+
         <div className="w-full mx-auto bg-white rounded-lg">
           <header className="px-5 py-4 border-b border-gray-100">
             <h2 className="text-xl text-gray-600 font-medium mb-5">Dimensi</h2>
@@ -159,11 +214,12 @@ function Dimensions() {
           <div className="p-3">
             <div className="px-5">
               <select
-                id="countries"
+                id="dimensi"
                 className="mb-5 animate-fadeIn opacity-0 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 outline-primary"
+                onChange={findDimensi}
               >
                 {dimensi.map((value, index) => (
-                  <option key={index} value="US">
+                  <option key={index} value={value.id_dimensi}>
                     {value.id_dimensi} - {value.nama_dimensi}
                   </option>
                 ))}
@@ -172,6 +228,17 @@ function Dimensions() {
                 type="text"
                 className="border outline-primary w-full p-2 px-4 mb-5 rounded-md animate-fadeInX opacity-0"
                 placeholder="Nama Dimensi"
+                value={
+                  Object.keys(dataUpdateDimensi).length !== 0
+                    ? dataUpdateDimensi.nama_dimensi
+                    : ""
+                }
+                onChange={(e) => {
+                  setDataUpdateDimensi({
+                    ...dataUpdateDimensi,
+                    nama_dimensi: e.target.value,
+                  });
+                }}
                 style={{ animationDelay: ".25s" }}
               />
               <div className="grid grid-cols-3 gap-5">
@@ -180,21 +247,54 @@ function Dimensions() {
                   className="border outline-primary p-2 px-4 mb-5 rounded-md animate-fadeInX opacity-0"
                   placeholder="BW"
                   style={{ animationDelay: ".45s" }}
+                  value={
+                    Object.keys(dataUpdateDimensi).length !== 0
+                      ? dataUpdateDimensi.batas_bawah
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setDataUpdateDimensi({
+                      ...dataUpdateDimensi,
+                      batas_bawah: Number(e.target.value),
+                    });
+                  }}
                 />
                 <input
                   type="number"
                   className="border outline-primary p-2 px-4 mb-5 rounded-md animate-fadeInX opacity-0"
                   placeholder="BT"
                   style={{ animationDelay: ".45s" }}
+                  value={
+                    Object.keys(dataUpdateDimensi).length !== 0
+                      ? dataUpdateDimensi.batas_tengah
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setDataUpdateDimensi({
+                      ...dataUpdateDimensi,
+                      batas_tengah: Number(e.target.value),
+                    });
+                  }}
                 />
                 <input
                   type="number"
                   className="border outline-primary p-2 px-4 mb-5 rounded-md animate-fadeInX opacity-0"
                   placeholder="BA"
                   style={{ animationDelay: ".45s" }}
+                  value={
+                    Object.keys(dataUpdateDimensi).length !== 0
+                      ? dataUpdateDimensi.batas_atas
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setDataUpdateDimensi({
+                      ...dataUpdateDimensi,
+                      batas_atas: Number(e.target.value),
+                    });
+                  }}
                 />
               </div>
-              <span>
+              <span onClick={updateDimensi}>
                 <Button text="submit" color="primary" />
               </span>
             </div>
